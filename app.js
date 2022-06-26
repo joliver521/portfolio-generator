@@ -1,24 +1,6 @@
-// Short hand
-// const [name, github] = profileDataArgs;
-// Long form
-// const name = profileDataArgs[0];
-// const github = profileDataArgs[1];
-
-// console.log(profileDataArgs);
-
-// const printProfileData = (profileDataArr) => {
-// This...
-// for (let i = 0; i < profileDataArr.length; i++) {
-//   console.log(profileDataArr[i]);
-// }
-
-// Is the same as this...
-//   profileDataArr.foreach((profileItem) => console.log(profileItem));
-// };
-
-// printProfileData(profileDataArgs);
-
+const fs = require('fs');
 const inquirer = require('inquirer');
+const generatePage = require('./src/page-template');
 
 const promptUser = () => {
   return inquirer.prompt([
@@ -64,14 +46,12 @@ const promptUser = () => {
   ]);
 };
 
-promptUser().then((answers) => console.log(answers));
-
 const promptProject = (portfolioData) => {
   console.log(`
-  =================
-  Add A New Project
-  =================
-  `);
+=================
+Add a New Project
+=================
+`);
 
   // If there's no 'projects' array property, create one
   if (!portfolioData.projects) {
@@ -158,11 +138,13 @@ const promptProject = (portfolioData) => {
 promptUser()
   .then(promptProject)
   .then((portfolioData) => {
-    console.log(portfolioData);
-    // will be uncommented in lesson 4
-    // const pageHTML = generatePage(portfolioData);
-    // fs.writeFile('./index.html', pageHTML, err => {
-    //   if (err) throw new Error(err);
-    //   console.log('Page created! Check out index.html in this directory to see it!');
-    // });
+    const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile('./index.html', pageHTML, (err) => {
+      if (err) throw new Error(err);
+
+      console.log(
+        'Page created! Check out index.html in this directory to see it!'
+      );
+    });
   });
